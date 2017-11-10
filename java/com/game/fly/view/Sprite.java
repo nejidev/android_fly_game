@@ -16,7 +16,7 @@ public class Sprite {
     public int height = 0;
 
     //移动种子
-    public int speed = 2;
+    public int speed = 0;
 
     //屏幕密度
     public int density = 1;
@@ -74,7 +74,7 @@ public class Sprite {
             canvas.drawBitmap(bitmap, getSrcRect(), getDescRect(), paint);
         }
         canvasRecf = new Rect(0, 0, canvas.getWidth(), canvas.getHeight());
-        //检查是否超出画布
+        //检查是否有交集
         if(! Rect.intersects(canvasRecf, getDescRect()))
         {
             destroy();

@@ -10,6 +10,7 @@ public class PlaneSprite extends Sprite {
         super(bitmap);
         //修改属性
         this.paint = paint;
+        speed = -2;
     }
 
 }
