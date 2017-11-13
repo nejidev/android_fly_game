@@ -11,6 +11,7 @@ public class BossSprite extends Sprite {
         //修改属性
         this.paint = paint;
         speed = 1;
+        life  = 5;
     }
 
 }

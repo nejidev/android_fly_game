@@ -132,16 +132,15 @@ public class GameView extends View {
     public void addSprites(Canvas canvas)
     {
         Sprite sprite = null;
-        //发放子弹
         if(0 == frame % 5)
         {
             int rand = (int)(Math.random() * 100);
+            //发放子弹
             sprite = new BulletSprite(drawableBitmap.get("blue_bullet"), density, paint);
             //移动到战机中间
             sprite.moveTo(planeSprite.x + planeSprite.width / 2, planeSprite.y);
             sprites.add(sprite);
             //放大 boss
-            Log.d("GameView", "rand: " + rand);
             if(2 > rand)
             {
                 sprite = new BossSprite(drawableBitmap.get("big"), density, paint);
@@ -165,7 +164,30 @@ public class GameView extends View {
         Iterator<Sprite> iterator = sprites.iterator();
         while(iterator.hasNext())
         {
-            iterator.next().draw(canvas);
+            Sprite sprite = iterator.next();
+            //计算打中的碰撞
+            for(Sprite bulletSprite : sprites)
+            {
+                if(bulletSprite instanceof BulletSprite)
+                {
+                    //检查是否包含 bullet
+                    if(sprite != bulletSprite)
+                    {
+                        //比较两者的矩形区域是否重叠
+                        if(Rect.intersects(sprite.getDescRect(), bulletSprite.getDescRect()))
+                        {
+                            //生命值 减1 当为0 时销毁对象
+                            sprite.life--;
+                            if(0 >= sprite.life)
+                            {
+                                sprite.bitmap = null;
+                            }
+                            bulletSprite.bitmap = null;
+                        }
+                    }
+                }
+            }
+            sprite.draw(canvas);
         }
     }
 

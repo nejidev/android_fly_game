@@ -30,6 +30,9 @@ public class Sprite {
     //画笔
     public Paint paint = null;
 
+    //生命
+    public int life = 1;
+
     public Sprite(Bitmap bitmap)
     {
         this.bitmap = bitmap;
