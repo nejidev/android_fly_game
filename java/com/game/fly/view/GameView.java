@@ -161,34 +161,52 @@ public class GameView extends View {
 
     public void drawSprites(Canvas canvas)
     {
+        List<Sprite> newSprite = new ArrayList<Sprite>();
         Iterator<Sprite> iterator = sprites.iterator();
+        Iterator<Sprite> bulletIterator = null;
+        //双重循环检测是否打中
         while(iterator.hasNext())
         {
             Sprite sprite = iterator.next();
-            //计算打中的碰撞
-            for(Sprite bulletSprite : sprites)
+            //检测不是爆炸精灵的碰撞
+            if(! (sprite instanceof ExplosionSprite))
             {
-                if(bulletSprite instanceof BulletSprite)
+                //所有炮弹精灵的 iterator
+                bulletIterator = sprites.iterator();
+                while (bulletIterator.hasNext())
                 {
-                    //检查是否包含 bullet
-                    if(sprite != bulletSprite)
+                    Sprite bulletSprite = bulletIterator.next();
+                    if (bulletSprite instanceof BulletSprite)
                     {
-                        //比较两者的矩形区域是否重叠
-                        if(Rect.intersects(sprite.getDescRect(), bulletSprite.getDescRect()))
+                        //当2个 iterator 的对象不同时检测
+                        if (sprite != bulletSprite)
                         {
-                            //生命值 减1 当为0 时销毁对象
-                            sprite.life--;
-                            if(0 >= sprite.life)
+                            //比较两者的矩形区域是否重叠
+                            if (null != bulletSprite.bitmap && null != sprite.bitmap && Rect.intersects(sprite.getDescRect(), bulletSprite.getDescRect()))
                             {
-                                sprite.bitmap = null;
+                                //生命值 减1 当为0 时销毁对象
+                                sprite.life--;
+                                if (0 >= sprite.life)
+                                {
+                                    //销毁物体
+                                    sprite.bitmap = null;
+                                    //创建爆炸效果图
+                                    Sprite expSprite = new ExplosionSprite(drawableBitmap.get("explosion"), density, paint);
+                                    //调整位置
+                                    expSprite.moveTo(sprite.x, sprite.y);
+                                    newSprite.add(expSprite);
+                                }
+                                //销毁炮弹
+                                bulletSprite.bitmap = null;
                             }
-                            bulletSprite.bitmap = null;
                         }
                     }
                 }
             }
             sprite.draw(canvas);
         }
+        //添加爆炸效果图 到 sprites 下次就会绘制出来
+        sprites.addAll(newSprite);
     }
 
     public void destroySprites()

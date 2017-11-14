@@ -33,6 +33,9 @@ public class Sprite {
     //生命
     public int life = 1;
 
+    //当前帧数
+    public int frame = 0;
+
     public Sprite(Bitmap bitmap)
     {
         this.bitmap = bitmap;
@@ -71,6 +74,7 @@ public class Sprite {
     public void draw(Canvas canvas)
     {
         Rect canvasRecf;
+        frame++;
         //如果 bitmap 没有被销毁 并且是可见状态就绘制
         if(null != bitmap && visibility)
         {
